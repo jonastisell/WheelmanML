@@ -3,19 +3,16 @@
 
 #pragma comment(lib, "user32.lib")
 
-// 1. Definer funksjons-typer basert på de originale XInput-funksjonene
 typedef DWORD(WINAPI* tXInputGetCapabilities)(DWORD dwUserIndex, DWORD dwFlags, void* pCapabilities);
 typedef DWORD(WINAPI* tXInputGetDSoundAudioDeviceGuids)(DWORD dwUserIndex, GUID* pDSoundRenderGuid, GUID* pDSoundCaptureGuid);
 typedef DWORD(WINAPI* tXInputGetState)(DWORD dwUserIndex, void* pState);
 typedef DWORD(WINAPI* tXInputSetState)(DWORD dwUserIndex, void* pVibration);
 
-// Globale funksjonspekere
 tXInputGetCapabilities oXInputGetCapabilities = nullptr;
 tXInputGetDSoundAudioDeviceGuids oXInputGetDSoundAudioDeviceGuids = nullptr;
 tXInputGetState oXInputGetState = nullptr;
 tXInputSetState oXInputSetState = nullptr;
 
-// 2. Vanlige C-funksjoner (uten __declspec(dllexport) siden .def-filen håndterer dette)
 extern "C" DWORD WINAPI XInputGetCapabilities(DWORD dwUserIndex, DWORD dwFlags, void* pCapabilities) {
     if (!oXInputGetCapabilities) return ERROR_DEVICE_NOT_CONNECTED;
     return oXInputGetCapabilities(dwUserIndex, dwFlags, pCapabilities);
@@ -36,7 +33,6 @@ extern "C" DWORD WINAPI XInputSetState(DWORD dwUserIndex, void* pVibration) {
     return oXInputSetState(dwUserIndex, pVibration);
 }
 
-// 3. Finn og last den omdøpte originale filen
 bool InitializeProxy(HMODULE hProxyModule) {
     wchar_t buffer[MAX_PATH];
     GetModuleFileNameW(hProxyModule, buffer, MAX_PATH);
@@ -47,7 +43,6 @@ bool InitializeProxy(HMODULE hProxyModule) {
         path = path.substr(0, pos + 1);
     }
     
-    // Husket du å gi den originale spilfilen dette navnet?
     path += L"XINPUT9_1_0_original.dll";
 
     HMODULE hOriginalDll = LoadLibraryW(path.c_str());
@@ -64,7 +59,7 @@ bool InitializeProxy(HMODULE hProxyModule) {
 }
 
 DWORD WINAPI CustomCodeThread(LPVOID lpParam) {
-    MessageBoxA(NULL, "Proxy og eksport-tabell lastet suksessfullt!", "Suksess", MB_OK);
+    MessageBoxA(NULL, "Injected successfully", "WheelmanML", MB_OK);
     return 0;
 }
 
@@ -75,7 +70,7 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserv
         if (InitializeProxy(hModule)) {
             CreateThread(NULL, 0, CustomCodeThread, NULL, 0, NULL);
         } else {
-            MessageBoxA(NULL, "Feil: Sjekk at XINPUT9_1_0_original.dll ligger i samme mappe!", "Proxy Feil", MB_ICONERROR);
+            MessageBoxA(NULL, "Error: Cannot find xinput9_1_0_original.dll in the Binaries folder!", "WheelmanML", MB_ICONERROR);
             return FALSE; 
         }
     }
