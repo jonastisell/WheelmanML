@@ -1,0 +1,7 @@
+# Compile remenants
+dllmain.exp
+dllmain.lib
+dllmain.obj
+
+out/*
+!out/.gitkeep
