@@ -1,6 +1,9 @@
 #include <windows.h>
 #include <string>
 
+#include "config.h"
+#include "wheelmanml.h"
+
 #pragma comment(lib, "user32.lib")
 
 typedef DWORD(WINAPI* tXInputGetCapabilities)(DWORD dwUserIndex, DWORD dwFlags, void* pCapabilities);
@@ -58,11 +61,6 @@ bool InitializeProxy(HMODULE hProxyModule) {
     return (oXInputGetCapabilities && oXInputGetDSoundAudioDeviceGuids && oXInputGetState && oXInputSetState);
 }
 
-DWORD WINAPI CustomCodeThread(LPVOID lpParam) {
-    MessageBoxA(NULL, "Injected successfully", "WheelmanML", MB_OK);
-    return 0;
-}
-
 BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserved) {
     if (ul_reason_for_call == DLL_PROCESS_ATTACH) {
         DisableThreadLibraryCalls(hModule);
@@ -70,7 +68,7 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserv
         if (InitializeProxy(hModule)) {
             CreateThread(NULL, 0, CustomCodeThread, NULL, 0, NULL);
         } else {
-            MessageBoxA(NULL, "Error: Cannot find xinput9_1_0_original.dll in the Binaries folder!", "WheelmanML", MB_ICONERROR);
+            MessageBoxA(NULL, "Error: Cannot find xinput9_1_0_original.dll in the Binaries folder!", PROJECT_NAME, MB_ICONERROR);
             return FALSE; 
         }
     }
