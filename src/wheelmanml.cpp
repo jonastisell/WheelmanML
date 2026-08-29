@@ -1,7 +1,15 @@
 #include <windows.h>
 #include "config.h"
+#include "wheelmanml.h"
+#include "asi_loader.h"
+#include "logger.h"
 
 DWORD WINAPI CustomCodeThread(LPVOID lpParam) {
-    MessageBoxA(NULL, "Injected successfully", PROJECT_NAME, MB_OK);
-    return 0;
+  InitializeLog();
+  Log(std::string(PROJECT_NAME) + " started");
+
+  LoadASIPlugins();
+  Log("Finished loading ASI plugins");
+
+  return 0;
 }
