@@ -6,4 +6,8 @@ The path to the Developer Command Prompt from Visual Studio in `build.bat` needs
 After compiling, the final `xinput9_1_0.dll` will be put in the folder `out`.
 
 ## Usage
-Place the files `xinput9_1_0.dll` and `xinput9_1_0_original.dll` in the `Binaries` folder of Wheelman, or rename the original `xinput9_1_0.dll` to `xinput9_1_0_original.dll` before placing the modified DLL there. This is usually located at `C:\Program Files (x86)\Ubisoft Entertainment\Wheelman\Binaries\`. This is also where it looks for `.ASI` files.
+Place the files `xinput9_1_0.dll` and `xinput9_1_0_original.dll` in the `Binaries` folder of Wheelman, or rename the original `xinput9_1_0.dll` to `xinput9_1_0_original.dll` before placing the modified DLL there.
+
+The `Binaries` folder is usually located at `C:\Program Files (x86)\Ubisoft Entertainment\Wheelman\Binaries\`.
+
+This is also where the mod loader looks for and loads `.ASI` files from.
